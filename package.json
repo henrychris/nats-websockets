@@ -1,0 +1,17 @@
+{
+  "name": "nats-websockets",
+  "module": "index.js",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "scripts": {
+    "dev": "bun index.js"
+  },
+  "dependencies": {
+    "nats.ws": "^1.29.0"
+  }
+}
