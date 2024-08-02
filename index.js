@@ -1,11 +1,18 @@
-import { connect, StringCodec } from "nats.ws";
+import { connect, StringCodec, usernamePasswordAuthenticator } from "nats.ws";
 
-const SUBJECT = "user.1e50f41e-e677-47aa-aad5-31dd2ff026b8";
-const STREAM_NAME = "TestWebSocketMessageStream";
+const USER_ID = "678366e9-4a76-469d-9ebd-60b068312a87";
+const SUBJECT = `user.notification.${USER_ID}`;
+const STREAM_NAME = "UserNotificationStream";
+const URL = "ws://localhost:8080";
+const user = "limestone";
+const password = "testlimestone123";
 
 async function runSubscriber() {
     try {
-        const nc = await connect({ servers: "ws://localhost:8080" });
+        const nc = await connect({
+            servers: URL,
+            authenticator: new usernamePasswordAuthenticator(user, password),
+        });
         console.log("Connected to NATS server");
 
         // create a codec
@@ -48,12 +55,15 @@ async function runSubscriber() {
 
 async function runConsumer() {
     try {
-        const nc = await connect({ servers: "ws://localhost:8080" });
+        const nc = await connect({
+            servers: URL,
+            authenticator: new usernamePasswordAuthenticator(user, password),
+        });
         console.log("Connected to NATS server for JetStream.");
-        
+
         // create a codec
         const sc = StringCodec();
-        
+
         // create a jetstream context & create a consumer for the stream
         var js = nc.jetstream();
         var stream = await js.streams.get(STREAM_NAME);
